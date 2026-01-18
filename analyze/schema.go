@@ -50,7 +50,7 @@ var IssuesSchema = &llm.JSONSchema{
 						},
 						"line": map[string]any{
 							"type":        "integer",
-							"description": "Line number within the function where the issue occurs",
+							"description": "Line number within the code block shown above, where line 1 is the first line of the code block",
 						},
 						"severity": map[string]any{
 							"type":        "string",
