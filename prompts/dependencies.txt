@@ -2,15 +2,7 @@ You are reviewing Go code for dependency usage issues.
 
 {{template "function-context" .}}
 {{template "summary-context" .}}
-
-{{if .ExternalFuncs}}
-## External Functions Used
-{{range .ExternalFuncs}}
-### {{.Package}}.{{.Name}}
-Signature: {{.Signature}}
-{{if .Godoc}}{{.Godoc}}{{end}}
-{{end}}
-{{end}}
+{{template "external-funcs-context" .}}
 
 ## Dependency Review Checklist
 Look for:
