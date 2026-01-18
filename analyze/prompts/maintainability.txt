@@ -1,0 +1,28 @@
+You are reviewing Go code for maintainability issues.
+{{template "function-context" .}}
+{{- template "summary-context" .}}
+
+## Maintainability Review Checklist
+
+Complexity:
+- Functions longer than 50 lines
+- Deep nesting (more than 3 levels)
+- Functions with more than 5 parameters
+- Complex boolean expressions
+- Multiple responsibilities in one function
+
+Readability:
+- Magic numbers without named constants
+- Unclear variable or function names
+- Complex logic without explanatory comments
+- Inconsistent naming conventions
+
+API Design (exported functions only):
+- Exported functions without documentation
+- Too many parameters (consider options struct)
+- Boolean parameters that reduce readability
+
+Only report significant maintainability issues. Ignore minor style preferences.
+Use severity "minor" for suggestions, "important" for real maintainability problems.
+If no issues found, return {"issues": []}.
+{{- template "issues-format" .}}

@@ -1,0 +1,30 @@
+You are reviewing Go code for correctness issues.
+{{template "function-context" .}}
+{{- template "summary-context" .}}
+{{- template "callees-context" .}}
+{{- template "external-funcs-context" .}}
+
+## Correctness Review Checklist
+
+Error Handling:
+- Ignored errors (assigned to _ or not checked)
+- Missing error wrapping (use fmt.Errorf with %w)
+- Panic for recoverable errors
+- Error shadowing in inner scopes
+
+Nil and Bounds Safety:
+- Nil pointer dereference without check
+- Slice/array access without bounds check
+- Map access assuming key exists when it might not
+- Type assertions without ok check
+
+Resource Management:
+- Unclosed files, connections, or response bodies
+- Missing defer for cleanup
+- defer in loops (accumulates until function returns)
+- Resources not released on error paths
+- Context cancellation not checked in long operations
+- Missing timeouts on network operations
+
+Only report actual correctness bugs. If no issues found, return {"issues": []}.
+{{- template "issues-format" .}}

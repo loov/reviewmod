@@ -20,17 +20,9 @@ output: {
 }
 
 analyses: [
-	{name: "summary", prompt: "builtin:summary"},
-	{name: "security", prompt: "builtin:security"},
-	{name: "errors", prompt: "builtin:errors"},
-	{name: "cleanliness", prompt: "builtin:cleanliness"},
-	{name: "concurrency", prompt: "builtin:concurrency"},
-	{name: "performance", prompt: "builtin:performance"},
-	{name: "api-design", prompt: "builtin:api-design"},
-	{name: "testing", prompt: "builtin:testing"},
-	{name: "logging", prompt: "builtin:logging"},
-	{name: "resources", prompt: "builtin:resources"},
-	{name: "validation", prompt: "builtin:validation"},
-	{name: "dependencies", prompt: "builtin:dependencies"},
-	{name: "complexity", prompt: "builtin:complexity"},
+	{name: "summary", prompt: "builtin:summary", description: "Summarize function behavior for use by other passes"},
+	{name: "security", prompt: "builtin:security", description: "Find security vulnerabilities"},
+	{name: "correctness", prompt: "builtin:correctness", description: "Find bugs in error handling, nil safety, and resource management"},
+	{name: "concurrency", prompt: "builtin:concurrency", description: "Find race conditions and goroutine issues"},
+	{name: "maintainability", prompt: "builtin:maintainability", description: "Find complexity and readability issues"},
 ]

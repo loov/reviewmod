@@ -11,17 +11,9 @@ func TestLoadPrompt(t *testing.T) {
 	prompts := []string{
 		"summary",
 		"security",
-		"errors",
-		"cleanliness",
+		"correctness",
 		"concurrency",
-		"performance",
-		"api-design",
-		"testing",
-		"logging",
-		"resources",
-		"validation",
-		"dependencies",
-		"complexity",
+		"maintainability",
 	}
 
 	for _, name := range prompts {

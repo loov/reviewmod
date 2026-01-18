@@ -1,4 +1,4 @@
-pass: validation
+pass: correctness
 package: ./testdata/testpkg
 
 -- want.txt --
@@ -31,7 +31,7 @@ Be precise and concise. Focus on what callers need to know.
 
 
 == prompt 1 ==
-You are reviewing Go code for input validation issues.
+You are reviewing Go code for correctness issues.
 
 
 ## Function: Add
@@ -51,22 +51,29 @@ func Add(a, b int) int {
 Purpose: test purpose
 Behavior: test behavior
 
-## Input Validation Review Checklist
-Look for:
-- Missing nil checks before dereferencing pointers
-- Missing length checks before slice/array access
-- Missing bounds validation on numeric inputs
-- Assumptions about string format without validation
-- Missing empty string checks
-- Integer overflow potential on arithmetic
-- Missing validation at API boundaries
-- Type assertions without ok check
-- Map access without existence check when needed
-- Slice capacity assumptions
-- Missing validation of external data (JSON, user input)
-- Trusting data from channels/callbacks without validation
+## Correctness Review Checklist
 
-Only report actual validation issues. If no issues found, return {"issues": []}.
+Error Handling:
+- Ignored errors (assigned to _ or not checked)
+- Missing error wrapping (use fmt.Errorf with %w)
+- Panic for recoverable errors
+- Error shadowing in inner scopes
+
+Nil and Bounds Safety:
+- Nil pointer dereference without check
+- Slice/array access without bounds check
+- Map access assuming key exists when it might not
+- Type assertions without ok check
+
+Resource Management:
+- Unclosed files, connections, or response bodies
+- Missing defer for cleanup
+- defer in loops (accumulates until function returns)
+- Resources not released on error paths
+- Context cancellation not checked in long operations
+- Missing timeouts on network operations
+
+Only report actual correctness bugs. If no issues found, return {"issues": []}.
 
 Respond with JSON. The "code" field must contain the exact line of code where the issue occurs, copied verbatim from the code block above.
 
