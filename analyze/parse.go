@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// codeBlockRegex matches markdown code blocks with any language specifier
+var codeBlockRegex = regexp.MustCompile("(?s)```\\w*\\s*(.+?)\\s*```")
+
 // SummaryResponse is the expected JSON structure for summary pass
 type SummaryResponse struct {
 	Purpose    string   `json:"purpose"`
@@ -55,12 +58,8 @@ func ParseIssuesResponse(response string) ([]IssueResponse, error) {
 // cleanJSON extracts JSON from markdown code blocks if present
 func cleanJSON(s string) string {
 	s = strings.TrimSpace(s)
-
-	// Remove markdown code blocks
-	codeBlockRegex := regexp.MustCompile("(?s)```(?:json)?\\s*(.+?)\\s*```")
 	if matches := codeBlockRegex.FindStringSubmatch(s); len(matches) > 1 {
 		return strings.TrimSpace(matches[1])
 	}
-
 	return s
 }

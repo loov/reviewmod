@@ -74,3 +74,30 @@ func TestParseIssuesResponse_WithMarkdown(t *testing.T) {
 		t.Fatalf("issues count = %d, want 1", len(issues))
 	}
 }
+
+func TestParseIssuesResponse_Empty(t *testing.T) {
+	response := `{"issues": []}`
+	issues, err := ParseIssuesResponse(response)
+	if err != nil {
+		t.Fatalf("ParseIssuesResponse: %v", err)
+	}
+	if len(issues) != 0 {
+		t.Errorf("expected 0 issues, got %d", len(issues))
+	}
+}
+
+func TestParseSummaryResponse_InvalidJSON(t *testing.T) {
+	response := `{invalid json}`
+	_, err := ParseSummaryResponse(response)
+	if err == nil {
+		t.Error("expected error for invalid JSON")
+	}
+}
+
+func TestParseIssuesResponse_InvalidJSON(t *testing.T) {
+	response := `not json at all`
+	_, err := ParseIssuesResponse(response)
+	if err == nil {
+		t.Error("expected error for invalid JSON")
+	}
+}
