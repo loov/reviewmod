@@ -4,9 +4,6 @@
 ## Functions (mutually recursive group)
 {{range .Functions}}
 ### {{.Name}}
-{{- if .Godoc}}
-Documentation: {{.Godoc}}
-{{- end}}
 
 ```go
 {{.Body}}
@@ -16,9 +13,6 @@ Documentation: {{.Godoc}}
 
 ## Function: {{.Name}}
 Package: {{.Package}}
-{{- if .Godoc}}
-Documentation: {{.Godoc}}
-{{- end}}
 
 ```go
 {{.Body}}
