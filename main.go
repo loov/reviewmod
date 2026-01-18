@@ -16,6 +16,7 @@ import (
 	"github.com/loov/dreamlint/extract"
 	"github.com/loov/dreamlint/llm"
 	"github.com/loov/dreamlint/report"
+	"github.com/loov/dreamlint/report/sarif"
 )
 
 func main() {
@@ -256,7 +257,7 @@ func writeReport(rpt *report.Report, cfg *config.Config, format string, final bo
 		}
 	}
 	if format == "sarif" || format == "all" {
-		if err := report.WriteSARIFFile(rpt, cfg.Output.SARIF); err != nil {
+		if err := sarif.WriteFile(rpt, cfg.Output.SARIF); err != nil {
 			return fmt.Errorf("write sarif: %w", err)
 		}
 		if final {

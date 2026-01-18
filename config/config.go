@@ -46,10 +46,10 @@ type OutputConfig struct {
 
 // AnalysisPass defines a single analysis pass
 type AnalysisPass struct {
-	Name                      string     `json:"name"`
-	Prompt                    string     `json:"prompt"`
-	Enabled                   bool       `json:"enabled"`
-	LLM                       *LLMConfig `json:"llm,omitempty"`
+	Name    string     `json:"name"`
+	Prompt  string     `json:"prompt"`
+	Enabled bool       `json:"enabled"`
+	LLM     *LLMConfig `json:"llm,omitempty"`
 }
 
 // LoadConfig loads and validates a Cue configuration file
