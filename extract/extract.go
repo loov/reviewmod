@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/printer"
 	"go/token"
+	"os"
 	"strings"
 
 	"golang.org/x/tools/go/packages"
@@ -30,8 +31,28 @@ func ExtractFunctions(p *Packages) []*FunctionInfo {
 func ExtractFunctionsFromPackages(pkgs []*packages.Package) []*FunctionInfo {
 	var funcs []*FunctionInfo
 
+	// Build a map of filename to file content for source extraction
+	fileContents := make(map[string][]byte)
+
 	for _, pkg := range pkgs {
 		for _, file := range pkg.Syntax {
+			pos := pkg.Fset.Position(file.Pos())
+			if _, ok := fileContents[pos.Filename]; ok {
+				continue
+			}
+			// Read file content for source extraction
+			content, err := os.ReadFile(pos.Filename)
+			if err == nil {
+				fileContents[pos.Filename] = content
+			}
+		}
+	}
+
+	for _, pkg := range pkgs {
+		for _, file := range pkg.Syntax {
+			filePos := pkg.Fset.Position(file.Pos())
+			content := fileContents[filePos.Filename]
+
 			for _, decl := range file.Decls {
 				fn, ok := decl.(*ast.FuncDecl)
 				if !ok {
@@ -43,6 +64,7 @@ func ExtractFunctionsFromPackages(pkgs []*packages.Package) []*FunctionInfo {
 				if fn.Doc != nil {
 					startPos = fn.Doc.Pos()
 				}
+				endPos := fn.End()
 
 				info := &FunctionInfo{
 					Package:  pkg.PkgPath,
@@ -60,8 +82,16 @@ func ExtractFunctionsFromPackages(pkgs []*packages.Package) []*FunctionInfo {
 				// Extract signature
 				info.Signature = formatSignature(pkg.Fset, fn)
 
-				// Extract full function declaration as body
-				{
+				// Extract full function from source (preserves comments and formatting)
+				if content != nil {
+					startOffset := pkg.Fset.Position(startPos).Offset
+					endOffset := pkg.Fset.Position(endPos).Offset
+					if startOffset >= 0 && endOffset <= len(content) {
+						info.Body = string(content[startOffset:endOffset])
+					}
+				}
+				// Fallback to printer if source extraction failed
+				if info.Body == "" {
 					var buf strings.Builder
 					printer.Fprint(&buf, pkg.Fset, fn)
 					info.Body = buf.String()
