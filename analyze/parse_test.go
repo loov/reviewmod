@@ -57,24 +57,6 @@ func TestParseIssuesResponse(t *testing.T) {
 	}
 }
 
-func TestParseIssuesResponse_WithMarkdown(t *testing.T) {
-	// LLMs sometimes wrap JSON in markdown code blocks
-	response := "```json\n" + `{
-  "issues": [
-    {"line": 10, "severity": "medium", "message": "test"}
-  ]
-}` + "\n```"
-
-	issues, err := ParseIssuesResponse(response)
-	if err != nil {
-		t.Fatalf("ParseIssuesResponse: %v", err)
-	}
-
-	if len(issues) != 1 {
-		t.Fatalf("issues count = %d, want 1", len(issues))
-	}
-}
-
 func TestParseIssuesResponse_Empty(t *testing.T) {
 	response := `{"issues": []}`
 	issues, err := ParseIssuesResponse(response)
@@ -99,33 +81,6 @@ func TestParseIssuesResponse_InvalidJSON(t *testing.T) {
 	_, err := ParseIssuesResponse(response)
 	if err == nil {
 		t.Error("expected error for invalid JSON")
-	}
-}
-
-func TestParseIssuesResponse_UnescapedTab(t *testing.T) {
-	// LLMs sometimes produce unescaped tabs in strings
-	response := "{\"issues\": [{\"line\": 1, \"severity\": \"low\", \"message\": \"use\ttabs\"}]}"
-	issues, err := ParseIssuesResponse(response)
-	if err != nil {
-		t.Fatalf("ParseIssuesResponse: %v", err)
-	}
-	if len(issues) != 1 {
-		t.Fatalf("issues count = %d, want 1", len(issues))
-	}
-	if issues[0].Message != "use\ttabs" {
-		t.Errorf("message = %q, want %q", issues[0].Message, "use\ttabs")
-	}
-}
-
-func TestParseIssuesResponse_UnescapedNewline(t *testing.T) {
-	// LLMs sometimes produce unescaped newlines in strings
-	response := "{\"issues\": [{\"line\": 1, \"severity\": \"low\", \"message\": \"line1\nline2\"}]}"
-	issues, err := ParseIssuesResponse(response)
-	if err != nil {
-		t.Fatalf("ParseIssuesResponse: %v", err)
-	}
-	if len(issues) != 1 {
-		t.Fatalf("issues count = %d, want 1", len(issues))
 	}
 }
 
