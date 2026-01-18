@@ -1,0 +1,70 @@
+# reviewmod
+
+reviewmod is a staged Go code review tool that analyzes functions in dependency order using LLMs. It works around context limits by building a callgraph, grouping mutually recursive functions, and analyzing them bottom-up so that callee summaries inform caller analysis.
+
+This project was created with AI assistance using Claude.
+
+## Installation
+
+```
+go install github.com/loov/reviewmod@latest
+```
+
+## Usage
+
+```
+reviewmod [flags] [packages...]
+```
+
+By default, reviewmod analyzes all packages in the current module using the configuration in `reviewmod.cue`.
+
+Flags:
+
+```
+-config string    path to config file (default "reviewmod.cue")
+-format string    output format: json, markdown, or both (default "both")
+```
+
+## Configuration
+
+Create a `reviewmod.cue` file in your project root:
+
+```cue
+llm: {
+    base_url:    "http://localhost:8080/v1"
+    model:       "llama3"
+    max_tokens:  4096
+    temperature: 0.1
+}
+
+cache: {
+    dir:     ".reviewmod/cache"
+    enabled: true
+}
+
+output: {
+    json:     "reviewmod-report.json"
+    markdown: "reviewmod-report.md"
+}
+
+analyses: [
+    {name: "summary", prompt: "prompts/summary.txt"},
+    {name: "security", prompt: "prompts/security.txt"},
+    {name: "errors", prompt: "prompts/errors.txt"},
+    {name: "cleanliness", prompt: "prompts/cleanliness.txt"},
+]
+```
+
+Each analysis pass can specify its own LLM configuration to use different models for different tasks.
+
+## How It Works
+
+reviewmod extracts all functions from the specified packages and builds a callgraph using Class Hierarchy Analysis. It then computes strongly connected components using Tarjan's algorithm to group mutually recursive functions. These groups are sorted in reverse topological order so that callees are analyzed before their callers.
+
+For each analysis unit, reviewmod first generates a summary describing the function's purpose, behavior, invariants, and security properties. This summary is cached and passed to callers during their analysis. Then it runs each configured analysis pass (security, error handling, cleanliness) and collects issues.
+
+Results are written as JSON for programmatic consumption and Markdown for human review.
+
+## License
+
+MIT
