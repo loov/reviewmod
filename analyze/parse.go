@@ -140,12 +140,7 @@ type ParseError struct {
 }
 
 func (e *ParseError) Error() string {
-	// Truncate long responses for readable errors
-	preview := e.Cleaned
-	if len(preview) > 200 {
-		preview = preview[:200] + "..."
-	}
-	return fmt.Sprintf("failed to parse LLM response: %v\nResponse preview: %s", e.Err, preview)
+	return fmt.Sprintf("failed to parse LLM response: %v\nResponse:\n%s", e.Err, e.Response)
 }
 
 func (e *ParseError) Unwrap() error {
