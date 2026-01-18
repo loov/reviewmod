@@ -1,8 +1,7 @@
 You are reviewing Go code for testability issues.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
-{{template "callees-context" .}}
+{{- template "summary-context" .}}
+{{- template "callees-context" .}}
 
 ## Testability Review Checklist
 Look for:
@@ -20,4 +19,4 @@ Look for:
 - Package-level variables that hold state
 
 Only report actual testability issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

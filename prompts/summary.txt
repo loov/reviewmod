@@ -1,7 +1,6 @@
 You are analyzing a Go function to create a summary of its behavior.
-
 {{template "function-context" .}}
-{{template "callees-context" .}}
+{{- template "callees-context" .}}
 
 Analyze this function and respond with JSON in this exact format:
 {

@@ -1,7 +1,6 @@
 You are reviewing code cleanliness and maintainability of a Go function.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
+{{- template "summary-context" .}}
 
 ## Code Cleanliness Review Checklist
 Look for these issues:
@@ -19,4 +18,4 @@ Look for these issues:
 Note: This is NOT a security or error handling review. Focus only on code quality and maintainability.
 Only report actual cleanliness issues. If no issues found, return {"issues": []}.
 Use severity "minor" for style suggestions, "important" for maintainability concerns.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

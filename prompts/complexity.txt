@@ -1,7 +1,6 @@
 You are reviewing Go code for complexity issues.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
+{{- template "summary-context" .}}
 
 ## Complexity Review Checklist
 Look for:
@@ -20,4 +19,4 @@ Look for:
 - Long parameter lists of same type (easy to swap)
 
 Only report actual complexity issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

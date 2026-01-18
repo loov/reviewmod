@@ -1,8 +1,7 @@
 You are reviewing Go code for dependency usage issues.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
-{{template "external-funcs-context" .}}
+{{- template "summary-context" .}}
+{{- template "external-funcs-context" .}}
 
 ## Dependency Review Checklist
 Look for:
@@ -20,4 +19,4 @@ Look for:
 - Using cgo when pure Go alternatives exist
 
 Only report actual dependency issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

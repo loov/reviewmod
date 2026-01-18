@@ -1,9 +1,8 @@
 You are reviewing Go code for concurrency issues.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
-{{template "callees-context" .}}
-{{template "external-funcs-context" .}}
+{{- template "summary-context" .}}
+{{- template "callees-context" .}}
+{{- template "external-funcs-context" .}}
 
 ## Concurrency Review Checklist
 Look for:
@@ -19,4 +18,4 @@ Look for:
 - sync.Mutex copied by value
 
 Only report actual concurrency issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

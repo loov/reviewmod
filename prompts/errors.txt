@@ -1,8 +1,7 @@
 You are reviewing error handling in a Go function.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
-{{template "callees-context" .}}
+{{- template "summary-context" .}}
+{{- template "callees-context" .}}
 
 ## Error Handling Review Checklist
 Look for these issues:
@@ -17,4 +16,4 @@ Look for these issues:
 - Error Type Assertions: Unsafe type assertions on error values
 
 Only report actual error handling issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

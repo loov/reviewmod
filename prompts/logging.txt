@@ -1,8 +1,7 @@
 You are reviewing Go code for logging and observability issues.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
-{{template "callees-context" .}}
+{{- template "summary-context" .}}
+{{- template "callees-context" .}}
 
 ## Logging Review Checklist
 Look for:
@@ -20,4 +19,4 @@ Look for:
 - Missing latency/duration tracking for operations
 
 Only report actual logging/observability issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}

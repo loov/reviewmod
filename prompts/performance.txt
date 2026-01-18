@@ -1,9 +1,8 @@
 You are reviewing Go code for performance issues.
-
 {{template "function-context" .}}
-{{template "summary-context" .}}
-{{template "callees-context" .}}
-{{template "external-funcs-context" .}}
+{{- template "summary-context" .}}
+{{- template "callees-context" .}}
+{{- template "external-funcs-context" .}}
 
 ## Performance Review Checklist
 Look for:
@@ -20,4 +19,4 @@ Look for:
 - Unbounded memory growth (slices that only grow)
 
 Only report actual performance issues. If no issues found, return {"issues": []}.
-{{template "issues-format" .}}
+{{- template "issues-format" .}}
