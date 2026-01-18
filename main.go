@@ -47,20 +47,21 @@ func run(configPath, format string, patterns []string) error {
 		c = cache.New(cfg.Cache.Dir)
 	}
 
+	// Load packages once
+	fmt.Println("Loading packages...")
+	pkgs, err := extract.LoadPackages(".", patterns...)
+	if err != nil {
+		return fmt.Errorf("load packages: %w", err)
+	}
+
 	// Extract functions
 	fmt.Println("Extracting functions...")
-	funcs, err := extract.ExtractFunctions(".", patterns...)
-	if err != nil {
-		return fmt.Errorf("extract functions: %w", err)
-	}
+	funcs := extract.ExtractFunctions(pkgs)
 	fmt.Printf("Found %d functions\n", len(funcs))
 
 	// Build callgraph
 	fmt.Println("Building callgraph...")
-	graph, err := extract.BuildCallgraph(".", patterns...)
-	if err != nil {
-		return fmt.Errorf("build callgraph: %w", err)
-	}
+	graph := extract.BuildCallgraph(pkgs)
 
 	// Build analysis units
 	fmt.Println("Building analysis units...")

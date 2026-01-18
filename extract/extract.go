@@ -2,7 +2,6 @@
 package extract
 
 import (
-	"fmt"
 	"go/ast"
 	"go/printer"
 	"go/token"
@@ -22,29 +21,16 @@ type FunctionInfo struct {
 	Position  token.Position
 }
 
-// ExtractFunctions loads packages and extracts all function information
-func ExtractFunctions(dir string, patterns ...string) ([]*FunctionInfo, error) {
-	cfg := &packages.Config{
-		Mode: packages.NeedName |
-			packages.NeedFiles |
-			packages.NeedSyntax |
-			packages.NeedTypes |
-			packages.NeedTypesInfo,
-		Dir: dir,
-	}
+// ExtractFunctions extracts all function information from loaded packages.
+func ExtractFunctions(p *Packages) []*FunctionInfo {
+	return ExtractFunctionsFromPackages(p.Pkgs)
+}
 
-	pkgs, err := packages.Load(cfg, patterns...)
-	if err != nil {
-		return nil, fmt.Errorf("load packages: %w", err)
-	}
-
+// ExtractFunctionsFromPackages extracts function information from a slice of packages.
+func ExtractFunctionsFromPackages(pkgs []*packages.Package) []*FunctionInfo {
 	var funcs []*FunctionInfo
 
 	for _, pkg := range pkgs {
-		if len(pkg.Errors) > 0 {
-			return nil, fmt.Errorf("package %s has errors: %v", pkg.PkgPath, pkg.Errors)
-		}
-
 		for _, file := range pkg.Syntax {
 			for _, decl := range file.Decls {
 				fn, ok := decl.(*ast.FuncDecl)
@@ -85,7 +71,7 @@ func ExtractFunctions(dir string, patterns ...string) ([]*FunctionInfo, error) {
 		}
 	}
 
-	return funcs, nil
+	return funcs
 }
 
 func formatSignature(fset *token.FileSet, fn *ast.FuncDecl) string {

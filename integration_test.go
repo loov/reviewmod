@@ -42,21 +42,21 @@ func Multiply(a, b int) int {
 		t.Fatal(err)
 	}
 
-	// Extract functions
-	funcs, err := extract.ExtractFunctions(dir, "./...")
+	// Load packages once
+	pkgs, err := extract.LoadPackages(dir, "./...")
 	if err != nil {
-		t.Fatalf("ExtractFunctions: %v", err)
+		t.Fatalf("LoadPackages: %v", err)
 	}
+
+	// Extract functions
+	funcs := extract.ExtractFunctions(pkgs)
 
 	if len(funcs) != 2 {
 		t.Fatalf("got %d functions, want 2", len(funcs))
 	}
 
 	// Build callgraph
-	graph, err := extract.BuildCallgraph(dir, "./...")
-	if err != nil {
-		t.Fatalf("BuildCallgraph: %v", err)
-	}
+	graph := extract.BuildCallgraph(pkgs)
 
 	// Multiply should call Add
 	if !contains(graph["testpkg.Multiply"], "testpkg.Add") {

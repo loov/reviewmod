@@ -32,10 +32,12 @@ func helper() {}
 		t.Fatal(err)
 	}
 
-	funcs, err := ExtractFunctions(dir, "./...")
+	pkgs, err := LoadPackages(dir, "./...")
 	if err != nil {
-		t.Fatalf("ExtractFunctions: %v", err)
+		t.Fatalf("LoadPackages: %v", err)
 	}
+
+	funcs := ExtractFunctions(pkgs)
 
 	if len(funcs) != 2 {
 		t.Fatalf("got %d functions, want 2", len(funcs))

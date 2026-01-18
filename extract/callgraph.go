@@ -10,31 +10,14 @@ import (
 	"golang.org/x/tools/go/ssa/ssautil"
 )
 
-// BuildCallgraph builds a callgraph using CHA analysis
-// Returns a map from function ID to list of callee IDs
-func BuildCallgraph(dir string, patterns ...string) (map[string][]string, error) {
-	cfg := &packages.Config{
-		Mode: packages.NeedName |
-			packages.NeedFiles |
-			packages.NeedSyntax |
-			packages.NeedTypes |
-			packages.NeedTypesInfo |
-			packages.NeedImports |
-			packages.NeedDeps,
-		Dir: dir,
-	}
+// BuildCallgraph builds a callgraph using CHA analysis from loaded packages.
+// Returns a map from function ID to list of callee IDs.
+func BuildCallgraph(p *Packages) map[string][]string {
+	return BuildCallgraphFromPackages(p.Pkgs)
+}
 
-	pkgs, err := packages.Load(cfg, patterns...)
-	if err != nil {
-		return nil, fmt.Errorf("load packages: %w", err)
-	}
-
-	for _, pkg := range pkgs {
-		if len(pkg.Errors) > 0 {
-			return nil, fmt.Errorf("package %s has errors: %v", pkg.PkgPath, pkg.Errors)
-		}
-	}
-
+// BuildCallgraphFromPackages builds a callgraph from a slice of packages.
+func BuildCallgraphFromPackages(pkgs []*packages.Package) map[string][]string {
 	// Build SSA
 	prog, _ := ssautil.AllPackages(pkgs, ssa.SanityCheckFunctions)
 	prog.Build()
@@ -77,7 +60,7 @@ func BuildCallgraph(dir string, patterns ...string) (map[string][]string, error)
 		}
 	}
 
-	return graph, nil
+	return graph
 }
 
 func funcID(fn *ssa.Function) string {

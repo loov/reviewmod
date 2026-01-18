@@ -28,10 +28,12 @@ func C() {}
 		t.Fatal(err)
 	}
 
-	graph, err := BuildCallgraph(dir, "./...")
+	pkgs, err := LoadPackages(dir, "./...")
 	if err != nil {
-		t.Fatalf("BuildCallgraph: %v", err)
+		t.Fatalf("LoadPackages: %v", err)
 	}
+
+	graph := BuildCallgraph(pkgs)
 
 	// A calls B
 	if !contains(graph["testpkg.A"], "testpkg.B") {
