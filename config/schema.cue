@@ -31,7 +31,7 @@ package config
 	llm?: #LLMConfig
 }
 
-// Config represents the configuration for the ReviewMod tool.
+// Config represents the configuration for the tool.
 #Config: {
 	llm: #LLMConfig
 	cache: {
