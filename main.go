@@ -128,6 +128,33 @@ func run(configPath, format string, resume bool, promptsDir string, patterns []s
 	analyzed := 0
 	var lastErr error
 
+	// Track issues found during analysis for live display
+	issuesBySeverity := make(map[string]int)
+	var currentPhase string
+
+	pipeline.OnProgress(func(event analyze.ProgressEvent) {
+		if event.Phase != currentPhase {
+			currentPhase = event.Phase
+			fmt.Printf("\r\033[K    → %s", currentPhase)
+		}
+		if event.IssueFound != nil {
+			issuesBySeverity[event.IssueFound.Severity]++
+			// Show running tally
+			fmt.Printf("\r\033[K    → %s [", currentPhase)
+			first := true
+			for _, sev := range []string{"critical", "important", "minor"} {
+				if count := issuesBySeverity[sev]; count > 0 {
+					if !first {
+						fmt.Print(" ")
+					}
+					fmt.Printf("%s:%d", sev, count)
+					first = false
+				}
+			}
+			fmt.Print("]")
+		}
+	})
+
 	for i, unit := range units {
 		// Skip already analyzed units
 		if _, exists := rpt.Units[unit.ID]; exists {
@@ -135,9 +162,14 @@ func run(configPath, format string, resume bool, promptsDir string, patterns []s
 			continue
 		}
 
-		fmt.Printf("Analyzing %d/%d: %s\n", i+1, len(units), unit.ID)
+		// Reset per-unit tracking
+		issuesBySeverity = make(map[string]int)
+		currentPhase = ""
+
+		fmt.Printf("\n[%d/%d] %s\n", i+1, len(units), unit.ID)
 
 		unitReport, err := pipeline.Analyze(ctx, unit, calleeSummaries)
+		fmt.Print("\r\033[K") // Clear the phase line
 		if err != nil {
 			lastErr = fmt.Errorf("analyze %s: %w", unit.ID, err)
 			fmt.Printf("Error: %v\n", lastErr)
@@ -149,6 +181,13 @@ func run(configPath, format string, resume bool, promptsDir string, patterns []s
 
 		rpt.Units[unit.ID] = *unitReport
 		analyzed++
+
+		// Print unit summary
+		if len(unitReport.Issues) == 0 {
+			fmt.Println("    ✓ No issues found")
+		} else {
+			fmt.Printf("    Found %d issue(s)\n", len(unitReport.Issues))
+		}
 
 		// Store summary for callers
 		if summary := pipeline.GetSummary(unit.ID); summary != nil {

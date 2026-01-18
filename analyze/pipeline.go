@@ -16,6 +16,21 @@ import (
 	"github.com/loov/reviewmod/report"
 )
 
+// ProgressCallback is called during analysis to report progress
+type ProgressCallback func(event ProgressEvent)
+
+// ProgressEvent represents a progress update during analysis
+type ProgressEvent struct {
+	Phase      string // "summary" or the analysis pass name
+	IssueFound *IssueEvent
+}
+
+// IssueEvent is emitted when an issue is found
+type IssueEvent struct {
+	Category string
+	Severity string
+}
+
 // Pipeline runs the analysis passes on all units
 type Pipeline struct {
 	config        *config.Config
@@ -25,6 +40,7 @@ type Pipeline struct {
 	summaries     map[string]*SummaryResponse
 	externalFuncs map[string]*extract.ExternalFunc
 	promptsFS     fs.FS
+	onProgress    ProgressCallback
 }
 
 // NewPipeline creates a new analysis pipeline
@@ -43,6 +59,17 @@ func NewPipeline(cfg *config.Config, c *cache.Cache, client llm.Client, external
 // When set, builtin: prompts will be loaded from this filesystem instead.
 func (p *Pipeline) SetPromptsFS(fsys fs.FS) {
 	p.promptsFS = fsys
+}
+
+// OnProgress sets a callback for progress events during analysis.
+func (p *Pipeline) OnProgress(cb ProgressCallback) {
+	p.onProgress = cb
+}
+
+func (p *Pipeline) reportProgress(event ProgressEvent) {
+	if p.onProgress != nil {
+		p.onProgress(event)
+	}
 }
 
 // LoadPrompts loads all prompt templates from config
@@ -88,6 +115,7 @@ func (p *Pipeline) Analyze(ctx context.Context, unit *extract.AnalysisUnit, call
 
 	// Run summary pass if not cached
 	if summary == nil {
+		p.reportProgress(ProgressEvent{Phase: "summary"})
 		var err error
 		summary, err = p.runSummaryPass(ctx, promptCtx)
 		if err != nil {
@@ -144,12 +172,20 @@ func (p *Pipeline) Analyze(ctx context.Context, unit *extract.AnalysisUnit, call
 			continue
 		}
 
+		p.reportProgress(ProgressEvent{Phase: pass.Name})
 		issues, err := p.runAnalysisPass(ctx, pass, promptCtx)
 		if err != nil {
 			return nil, fmt.Errorf("%s pass for %s: %w", pass.Name, unit.ID, err)
 		}
 
 		for _, issue := range issues {
+			p.reportProgress(ProgressEvent{
+				Phase: pass.Name,
+				IssueFound: &IssueEvent{
+					Category: pass.Name,
+					Severity: issue.Severity,
+				},
+			})
 			// Find the function's position and body to locate the code snippet
 			var fn *extract.FunctionInfo
 			if f, ok := funcPositions[issue.Function]; ok {
