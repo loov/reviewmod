@@ -1,38 +1,39 @@
-// report/markdown_test.go
-package report
+package markdown
 
 import (
 	"go/token"
 	"strings"
 	"testing"
+
+	"github.com/loov/dreamlint/report"
 )
 
-func TestWriteMarkdown(t *testing.T) {
-	r := NewReport()
+func TestWrite(t *testing.T) {
+	r := report.NewReport()
 	r.Metadata.Modules = []string{"testpkg"}
 
-	r.Units["testpkg.Hello"] = UnitReport{
-		Functions: []FunctionInfo{{
+	r.Units["testpkg.Hello"] = report.UnitReport{
+		Functions: []report.FunctionInfo{{
 			Package:   "testpkg",
 			Name:      "Hello",
 			Signature: "func Hello(name string) string",
 			Position:  token.Position{Filename: "main.go", Line: 10},
 		}},
-		Summary: FunctionSummary{
+		Summary: report.FunctionSummary{
 			Purpose:  "Returns a greeting",
 			Behavior: "Concatenates strings",
 		},
 	}
 
-	r.AddIssue("testpkg.Hello", Issue{
+	r.AddIssue("testpkg.Hello", report.Issue{
 		Position:   token.Position{Filename: "main.go", Line: 12},
-		Severity:   SeverityCritical,
+		Severity:   report.SeverityCritical,
 		Category:   "security",
 		Message:    "SQL injection vulnerability",
 		Suggestion: "Use parameterized queries",
 	})
 
-	md := WriteMarkdown(r)
+	md := Write(r)
 
 	// Check key sections exist
 	if !strings.Contains(md, "# Code Review Report") {

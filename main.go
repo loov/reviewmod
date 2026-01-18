@@ -16,6 +16,7 @@ import (
 	"github.com/loov/dreamlint/extract"
 	"github.com/loov/dreamlint/llm"
 	"github.com/loov/dreamlint/report"
+	"github.com/loov/dreamlint/report/markdown"
 	"github.com/loov/dreamlint/report/sarif"
 )
 
@@ -249,7 +250,7 @@ func writeReport(rpt *report.Report, cfg *config.Config, format string, final bo
 		}
 	}
 	if format == "markdown" || format == "all" {
-		if err := report.WriteMarkdownFile(rpt, cfg.Output.Markdown); err != nil {
+		if err := markdown.WriteFile(rpt, cfg.Output.Markdown); err != nil {
 			return fmt.Errorf("write markdown: %w", err)
 		}
 		if final {

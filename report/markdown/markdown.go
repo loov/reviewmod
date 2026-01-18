@@ -1,15 +1,17 @@
-// report/markdown.go
-package report
+// Package markdown provides Markdown format output for reports.
+package markdown
 
 import (
 	"fmt"
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/loov/dreamlint/report"
 )
 
-// WriteMarkdown renders the report as markdown
-func WriteMarkdown(r *Report) string {
+// Write renders the report as markdown
+func Write(r *report.Report) string {
 	var b strings.Builder
 
 	// Title
@@ -35,17 +37,17 @@ func WriteMarkdown(r *Report) string {
 		b.WriteString("## Critical Issues\n\n")
 		for _, unitID := range r.Summary.CriticalUnits {
 			unit := r.Units[unitID]
-			writeUnitIssues(&b, unitID, unit, SeverityCritical)
+			writeUnitIssues(&b, unitID, unit, report.SeverityCritical)
 		}
 	}
 
 	// High issues
-	highUnits := findUnitsWithSeverity(r, SeverityHigh)
+	highUnits := findUnitsWithSeverity(r, report.SeverityHigh)
 	if len(highUnits) > 0 {
 		b.WriteString("## High Priority Issues\n\n")
 		for _, unitID := range highUnits {
 			unit := r.Units[unitID]
-			writeUnitIssues(&b, unitID, unit, SeverityHigh)
+			writeUnitIssues(&b, unitID, unit, report.SeverityHigh)
 		}
 	}
 
@@ -75,7 +77,7 @@ func titleCase(s string) string {
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 
-func writeUnitIssues(b *strings.Builder, unitID string, unit UnitReport, severity Severity) {
+func writeUnitIssues(b *strings.Builder, unitID string, unit report.UnitReport, severity report.Severity) {
 	pos := ""
 	if len(unit.Functions) > 0 {
 		pos = fmt.Sprintf(" (%s:%d)", unit.Functions[0].Position.Filename, unit.Functions[0].Position.Line)
@@ -100,7 +102,7 @@ func writeUnitIssues(b *strings.Builder, unitID string, unit UnitReport, severit
 	b.WriteString("---\n\n")
 }
 
-func writeUnitSummary(b *strings.Builder, unitID string, unit UnitReport) {
+func writeUnitSummary(b *strings.Builder, unitID string, unit report.UnitReport) {
 	b.WriteString(fmt.Sprintf("### %s\n", unitID))
 
 	if unit.Summary.Purpose != "" {
@@ -120,7 +122,7 @@ func writeUnitSummary(b *strings.Builder, unitID string, unit UnitReport) {
 	}
 }
 
-func findUnitsWithSeverity(r *Report, severity Severity) []string {
+func findUnitsWithSeverity(r *report.Report, severity report.Severity) []string {
 	var units []string
 	for unitID, unit := range r.Units {
 		for _, issue := range unit.Issues {
@@ -134,8 +136,8 @@ func findUnitsWithSeverity(r *Report, severity Severity) []string {
 	return units
 }
 
-// WriteMarkdownFile writes the markdown report to a file
-func WriteMarkdownFile(r *Report, path string) error {
-	md := WriteMarkdown(r)
+// WriteFile writes the markdown report to a file
+func WriteFile(r *report.Report, path string) error {
+	md := Write(r)
 	return os.WriteFile(path, []byte(md), 0644)
 }
