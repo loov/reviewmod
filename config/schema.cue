@@ -12,7 +12,7 @@ package config
 
 #AnalysisPass: {
 	name:    string
-	prompt:  string
+	prompt:  string | *"builtin:\(name)"
 	enabled: bool | *true
 	llm?:    #LLMConfig
 	include_security_properties?: bool
@@ -29,5 +29,19 @@ package config
 		markdown: string | *"reviewmod-report.md"
 		sarif:    string | *"reviewmod-report.sarif"
 	}
-	analyses: [...#AnalysisPass]
+	analyses: [...#AnalysisPass] | *[
+		{name: "summary"},
+		{name: "security"},
+		{name: "errors"},
+		{name: "cleanliness"},
+		{name: "concurrency"},
+		{name: "performance"},
+		{name: "api-design"},
+		{name: "testing"},
+		{name: "logging"},
+		{name: "resources"},
+		{name: "validation"},
+		{name: "dependencies"},
+		{name: "complexity"},
+	]
 }
