@@ -156,7 +156,7 @@ func ToSARIF(r *Report) *SARIFReport {
 		Runs: []SARIFRun{{
 			Tool: SARIFTool{
 				Driver: SARIFDriver{
-					Name:    "reviewmod",
+					Name:    "dreamlint",
 					Version: "0.1.0",
 					Rules:   rules,
 				},

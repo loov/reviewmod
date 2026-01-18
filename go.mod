@@ -1,4 +1,4 @@
-module github.com/loov/reviewmod
+module github.com/loov/dreamlint
 
 go 1.25
 

@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/loov/reviewmod/extract"
+	"github.com/loov/dreamlint/extract"
 )
 
 func TestIntegration_FullPipeline(t *testing.T) {

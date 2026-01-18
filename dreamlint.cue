@@ -1,4 +1,4 @@
-// reviewmod.cue - Example configuration
+// dreamlint.cue - Example configuration
 
 llm: {
 	provider:    "openai"
@@ -9,14 +9,14 @@ llm: {
 }
 
 cache: {
-	dir:     ".reviewmod/cache"
+	dir:     ".dreamlint/cache"
 	enabled: true
 }
 
 output: {
-	json:     "reviewmod-report.json"
-	markdown: "reviewmod-report.md"
-	sarif:    "reviewmod-report.sarif"
+	json:     "dreamlint-report.json"
+	markdown: "dreamlint-report.md"
+	sarif:    "dreamlint-report.sarif"
 }
 
 analyses: [

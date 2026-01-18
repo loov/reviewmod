@@ -22,11 +22,11 @@ analyses: [
 	{name: "security", prompt: "prompts/security.txt"},
 ]
 `
-	if err := os.WriteFile(filepath.Join(dir, "reviewmod.cue"), []byte(cueFile), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "dreamlint.cue"), []byte(cueFile), 0644); err != nil {
 		t.Fatal(err)
 	}
 
-	cfg, err := LoadConfig(filepath.Join(dir, "reviewmod.cue"))
+	cfg, err := LoadConfig(filepath.Join(dir, "dreamlint.cue"))
 	if err != nil {
 		t.Fatalf("LoadConfig: %v", err)
 	}
@@ -40,8 +40,8 @@ analyses: [
 	}
 
 	// Check defaults
-	if cfg.Cache.Dir != ".reviewmod/cache" {
-		t.Errorf("cache.dir = %s, want .reviewmod/cache", cfg.Cache.Dir)
+	if cfg.Cache.Dir != ".dreamlint/cache" {
+		t.Errorf("cache.dir = %s, want .dreamlint/cache", cfg.Cache.Dir)
 	}
 
 	if len(cfg.Analyses) != 2 {

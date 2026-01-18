@@ -10,16 +10,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/loov/reviewmod/analyze"
-	"github.com/loov/reviewmod/cache"
-	"github.com/loov/reviewmod/config"
-	"github.com/loov/reviewmod/extract"
-	"github.com/loov/reviewmod/llm"
-	"github.com/loov/reviewmod/report"
+	"github.com/loov/dreamlint/analyze"
+	"github.com/loov/dreamlint/cache"
+	"github.com/loov/dreamlint/config"
+	"github.com/loov/dreamlint/extract"
+	"github.com/loov/dreamlint/llm"
+	"github.com/loov/dreamlint/report"
 )
 
 func main() {
-	configPath := flag.String("config", "reviewmod.cue", "path to config file")
+	configPath := flag.String("config", "dreamlint.cue", "path to config file")
 	format := flag.String("format", "all", "output format: json, markdown, sarif, or all")
 	resume := flag.Bool("resume", false, "resume from existing partial report")
 	promptsDir := flag.String("prompts", "", "directory to load prompts from (overrides builtin prompts)")

@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/loov/reviewmod/analyze"
-	"github.com/loov/reviewmod/config"
-	"github.com/loov/reviewmod/extract"
-	"github.com/loov/reviewmod/llm"
+	"github.com/loov/dreamlint/analyze"
+	"github.com/loov/dreamlint/config"
+	"github.com/loov/dreamlint/extract"
+	"github.com/loov/dreamlint/llm"
 	"golang.org/x/tools/txtar"
 )
 

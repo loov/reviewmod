@@ -1,7 +1,7 @@
 // analyze/schema.go
 package analyze
 
-import "github.com/loov/reviewmod/llm"
+import "github.com/loov/dreamlint/llm"
 
 // SummarySchema is the JSON schema for summary responses
 var SummarySchema = &llm.JSONSchema{

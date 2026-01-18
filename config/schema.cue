@@ -35,13 +35,13 @@ package config
 #Config: {
 	llm: #LLMConfig
 	cache: {
-		dir:     string | *".reviewmod/cache"
+		dir:     string | *".dreamlint/cache"
 		enabled: bool | *true
 	}
 	output: {
-		json:     string | *"reviewmod-report.json"
-		markdown: string | *"reviewmod-report.md"
-		sarif:    string | *"reviewmod-report.sarif"
+		json:     string | *"dreamlint-report.json"
+		markdown: string | *"dreamlint-report.md"
+		sarif:    string | *"dreamlint-report.sarif"
 	}
 	analyses: [...#AnalysisPass]
 }
