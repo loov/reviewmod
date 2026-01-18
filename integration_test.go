@@ -3,8 +3,6 @@
 package main
 
 import (
-	"os"
-	"path/filepath"
 	"slices"
 	"testing"
 
@@ -12,39 +10,8 @@ import (
 )
 
 func TestIntegration_FullPipeline(t *testing.T) {
-	dir := t.TempDir()
-
-	// Create test Go module
-	goMod := `module testpkg
-
-go 1.25
-`
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte(goMod), 0644); err != nil {
-		t.Fatal(err)
-	}
-
-	goFile := `package testpkg
-
-// Add adds two numbers.
-func Add(a, b int) int {
-	return a + b
-}
-
-// Multiply multiplies by calling Add repeatedly.
-func Multiply(a, b int) int {
-	result := 0
-	for i := 0; i < b; i++ {
-		result = Add(result, a)
-	}
-	return result
-}
-`
-	if err := os.WriteFile(filepath.Join(dir, "math.go"), []byte(goFile), 0644); err != nil {
-		t.Fatal(err)
-	}
-
-	// Load packages once
-	pkgs, err := extract.LoadPackages(dir, "./...")
+	// Load packages from testdata
+	pkgs, err := extract.LoadPackages("testdata/testpkg", "./...")
 	if err != nil {
 		t.Fatalf("LoadPackages: %v", err)
 	}
