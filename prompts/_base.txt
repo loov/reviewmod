@@ -53,13 +53,8 @@ Behavior: {{.Behavior}}
 {{end}}
 
 {{define "issues-format"}}
-Respond with JSON containing an array of issues. Each issue must have:
-- "function": name of the function where the issue occurs
-- "line": line number within the function (integer)
-- "severity": "critical", "important", or "minor"
-- "message": description of the issue
-- "suggestion": how to fix it (optional)
+Respond with JSON. Example:
+{"issues": [{"function": "ParseConfig", "line": 15, "severity": "critical", "message": "SQL injection via string concatenation", "suggestion": "Use parameterized query"}]}
 
 If no issues found, return {"issues": []}.
-Be specific about line numbers and provide actionable suggestions.
 {{end}}
