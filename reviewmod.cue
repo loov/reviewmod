@@ -16,6 +16,7 @@ cache: {
 output: {
 	json:     "reviewmod-report.json"
 	markdown: "reviewmod-report.md"
+	sarif:    "reviewmod-report.sarif"
 }
 
 analyses: [
