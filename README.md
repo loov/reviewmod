@@ -27,35 +27,9 @@ Flags:
 
 ## Configuration
 
-Create a `reviewmod.cue` file in your project root:
+Create a [`reviewmod.cue`](reviewmod.cue) file in your project root.
 
-```cue
-llm: {
-    base_url:    "http://localhost:8080/v1"
-    model:       "llama3"
-    max_tokens:  4096
-    temperature: 0.1
-}
-
-cache: {
-    dir:     ".reviewmod/cache"
-    enabled: true
-}
-
-output: {
-    json:     "reviewmod-report.json"
-    markdown: "reviewmod-report.md"
-}
-
-analyses: [
-    {name: "summary", prompt: "prompts/summary.txt"},
-    {name: "security", prompt: "prompts/security.txt"},
-    {name: "errors", prompt: "prompts/errors.txt"},
-    {name: "cleanliness", prompt: "prompts/cleanliness.txt"},
-]
-```
-
-Each analysis pass can specify its own LLM configuration to use different models for different tasks.
+Each analysis pass can specify its own LLM configuration to use different models for different tasks. See [`config/schema.cue`](config/schema.cue) for details for the format.
 
 ## How It Works
 
