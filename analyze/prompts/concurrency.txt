@@ -17,5 +17,4 @@ Look for:
 - Shared state modified in goroutines without protection
 - sync.Mutex copied by value
 
-Only report actual concurrency issues. If no issues found, return {"issues": []}.
 {{- template "issues-format" .}}

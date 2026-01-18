@@ -26,5 +26,4 @@ Resource Management:
 - Context cancellation not checked in long operations
 - Missing timeouts on network operations
 
-Only report actual correctness bugs. If no issues found, return {"issues": []}.
 {{- template "issues-format" .}}

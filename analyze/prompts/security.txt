@@ -17,5 +17,5 @@ Look for these vulnerability categories:
 - Race Conditions: Unsynchronized access to shared state
 - Information Disclosure: Sensitive data in logs or errors
 
-Only report actual security issues. If no issues found, return {"issues": []}.
+Only report actual security issues.
 {{- template "issues-format" .}}

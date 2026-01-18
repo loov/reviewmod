@@ -1,0 +1,6 @@
+You are reviewing Go code for common issues and mistakes.
+{{template "function-context" .}}
+
+Is this function correct?
+
+{{- template "issues-format" .}}

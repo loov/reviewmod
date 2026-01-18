@@ -24,5 +24,4 @@ API Design (exported functions only):
 
 Only report significant maintainability issues. Ignore minor style preferences.
 Use severity "minor" for suggestions, "important" for real maintainability problems.
-If no issues found, return {"issues": []}.
 {{- template "issues-format" .}}
