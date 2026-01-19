@@ -1,4 +1,3 @@
-// analyze/parse.go
 package analyze
 
 import (

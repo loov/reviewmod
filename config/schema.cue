@@ -1,4 +1,3 @@
-// config/schema.cue
 package config
 
 // LLMConfig represents the configuration for a Language Model (LLM).

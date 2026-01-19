@@ -1,4 +1,3 @@
-// llm/openai.go
 package llm
 
 import (

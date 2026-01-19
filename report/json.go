@@ -1,4 +1,3 @@
-// report/json.go
 package report
 
 import (

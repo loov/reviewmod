@@ -1,4 +1,3 @@
-// extract/packages.go
 package extract
 
 import (

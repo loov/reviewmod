@@ -1,4 +1,3 @@
-// extract/units.go
 package extract
 
 import (

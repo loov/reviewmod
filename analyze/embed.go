@@ -1,4 +1,3 @@
-// analyze/embed.go
 package analyze
 
 import "embed"

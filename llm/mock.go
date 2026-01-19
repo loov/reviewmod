@@ -1,4 +1,3 @@
-// llm/mock.go
 package llm
 
 import (

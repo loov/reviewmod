@@ -1,4 +1,3 @@
-// llm/client.go
 package llm
 
 import "context"

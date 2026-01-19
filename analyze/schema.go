@@ -1,4 +1,3 @@
-// analyze/schema.go
 package analyze
 
 import "github.com/loov/dreamlint/llm"

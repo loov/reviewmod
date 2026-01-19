@@ -1,4 +1,3 @@
-// analyze/prompt_test.go
 package analyze
 
 import (

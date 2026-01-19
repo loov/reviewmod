@@ -1,4 +1,3 @@
-// extract/callgraph_test.go
 package extract
 
 import (

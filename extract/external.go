@@ -1,4 +1,3 @@
-// extract/external.go
 package extract
 
 import (

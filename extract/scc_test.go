@@ -1,4 +1,3 @@
-// extract/scc_test.go
 package extract
 
 import (

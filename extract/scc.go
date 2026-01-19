@@ -1,4 +1,3 @@
-// extract/scc.go
 package extract
 
 import "sort"
