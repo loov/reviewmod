@@ -7,7 +7,7 @@ llm: {
 	base_url:    "http://localhost:1234/v1"
 	// qwen3-coder-30b and devstral-2 seem to be good choices,
 	// however the "devstral-2" does not seem to provide good line numbers.
-	model:       string | *"qwen/qwen3-coder-30b"
+	model:       string | *"qwen/qwen3-coder-30b:8bit"
 	max_tokens:  262144
 	temperature: 0.1
 }
@@ -52,3 +52,6 @@ pass: maintainability: {
 	prompt:      "builtin:maintainability"
 	description: "Find complexity and readability issues"
 }
+
+// Run only specific analysis passes:
+// analyse: [pass.summary, pass.baseline, pass.correctness]
