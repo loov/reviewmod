@@ -24,7 +24,7 @@ package config
 	// prompt specifies the prompt file to use for the analysis pass.
 	prompt: string
 	// description specifies the description for the analysis pass.
-	description: string
+	description: string | *""
 	// enabled specifies whether the analysis pass is enabled.
 	enabled: bool | *true
 	// llm allows overriding the configuration for the Language Model to be used by the analysis pass.

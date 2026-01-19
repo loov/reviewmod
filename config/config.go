@@ -52,8 +52,8 @@ type AnalysisPass struct {
 	LLM     *LLMConfig `json:"llm,omitempty"`
 }
 
-// LoadConfig loads and validates a Cue configuration file
-func LoadConfig(path string) (*Config, error) {
+// LoadConfig loads and validates Cue configuration from multiple files and inline strings.
+func LoadConfig(paths []string, inlineConfigs []string) (*Config, error) {
 	ctx := cuecontext.New()
 
 	// Load schema
@@ -62,29 +62,45 @@ func LoadConfig(path string) (*Config, error) {
 		return nil, fmt.Errorf("compile schema: %w", schemaVal.Err())
 	}
 
-	// Load user config
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("read config: %w", err)
-	}
-
-	userVal := ctx.CompileBytes(data)
-	if userVal.Err() != nil {
-		return nil, fmt.Errorf("compile config: %w", userVal.Err())
-	}
-
-	// Unify with schema to get defaults and validation
 	schema := schemaVal.LookupPath(cue.ParsePath("#Config"))
-	unified := schema.Unify(userVal)
-	if unified.Err() != nil {
-		return nil, fmt.Errorf("validate config: %w", unified.Err())
+
+	unified := schema
+
+	// Load each config file
+	for _, path := range paths {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return nil, fmt.Errorf("read config %s: %w", path, err)
+		}
+
+		val := ctx.CompileBytes(data)
+		if val.Err() != nil {
+			return nil, fmt.Errorf("compile config %s: %w", path, val.Err())
+		}
+
+		unified = unified.Unify(val)
+		if unified.Err() != nil {
+			return nil, fmt.Errorf("unify config %s: %w", path, unified.Err())
+		}
 	}
 
-	// Decode into Go struct
+	// Load each inline config
+	for _, inline := range inlineConfigs {
+		val := ctx.CompileString(inline)
+		if val.Err() != nil {
+			return nil, fmt.Errorf("compile inline config %q: %w", inline, val.Err())
+		}
+
+		unified = unified.Unify(val)
+		if unified.Err() != nil {
+			return nil, fmt.Errorf("unify inline config %q: %w", inline, unified.Err())
+		}
+	}
+
+	// Decode each source to a partial config and merge
 	var cfg Config
 	if err := unified.Decode(&cfg); err != nil {
 		return nil, fmt.Errorf("decode config: %w", err)
 	}
-
 	return &cfg, nil
 }

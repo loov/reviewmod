@@ -2,31 +2,11 @@
 package config
 
 import (
-	"os"
-	"path/filepath"
 	"testing"
 )
 
 func TestLoadConfig(t *testing.T) {
-	dir := t.TempDir()
-
-	cueFile := `
-llm: {
-	provider: "openai"
-	base_url: "http://localhost:8080/v1"
-	model: "llama3"
-}
-
-analyses: [
-	{name: "summary", prompt: "prompts/summary.txt"},
-	{name: "security", prompt: "prompts/security.txt"},
-]
-`
-	if err := os.WriteFile(filepath.Join(dir, "dreamlint.cue"), []byte(cueFile), 0644); err != nil {
-		t.Fatal(err)
-	}
-
-	cfg, err := LoadConfig(filepath.Join(dir, "dreamlint.cue"))
+	cfg, err := LoadConfig([]string{"./testdata/simple.cue"}, nil)
 	if err != nil {
 		t.Fatalf("LoadConfig: %v", err)
 	}
@@ -34,7 +14,6 @@ analyses: [
 	if cfg.LLM.Provider != "openai" {
 		t.Errorf("provider = %s, want openai", cfg.LLM.Provider)
 	}
-
 	if cfg.LLM.Model != "llama3" {
 		t.Errorf("model = %s, want llama3", cfg.LLM.Model)
 	}
@@ -43,8 +22,42 @@ analyses: [
 	if cfg.Cache.Dir != ".dreamlint/cache" {
 		t.Errorf("cache.dir = %s, want .dreamlint/cache", cfg.Cache.Dir)
 	}
-
 	if len(cfg.Analyses) != 2 {
 		t.Errorf("analyses count = %d, want 2", len(cfg.Analyses))
+	}
+}
+
+func TestLoadConfigMultipleFiles(t *testing.T) {
+	cfg, err := LoadConfig([]string{
+		"./testdata/base.cue",
+		"./testdata/override.cue",
+	}, nil)
+	if err != nil {
+		t.Fatalf("LoadConfig: %v", err)
+	}
+
+	// Model should be overridden
+	if cfg.LLM.Model != "gpt-4" {
+		t.Errorf("model = %s, want gpt-4", cfg.LLM.Model)
+	}
+
+	// Base URL should be preserved
+	if cfg.LLM.BaseURL != "http://localhost:8080/v1" {
+		t.Errorf("base_url = %s, want http://localhost:8080/v1", cfg.LLM.BaseURL)
+	}
+}
+
+func TestLoadConfigInline(t *testing.T) {
+	cfg, err := LoadConfig(
+		[]string{"./testdata/base.cue"},
+		[]string{`llm: { model: "claude-3" }`},
+	)
+	if err != nil {
+		t.Fatalf("LoadConfig: %v", err)
+	}
+
+	// Model should be overridden by inline config
+	if cfg.LLM.Model != "claude-3" {
+		t.Errorf("model = %s, want claude-3", cfg.LLM.Model)
 	}
 }

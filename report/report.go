@@ -26,11 +26,12 @@ type Report struct {
 
 // Metadata holds report metadata
 type Metadata struct {
-	GeneratedAt time.Time `json:"generated_at"`
-	Modules     []string  `json:"modules"`
-	ConfigFile  string    `json:"config_file"`
-	TotalUnits  int       `json:"total_units"`
-	CacheHits   int       `json:"cache_hits"`
+	GeneratedAt   time.Time `json:"generated_at"`
+	Modules       []string  `json:"modules"`
+	ConfigFiles   []string  `json:"config_files"`
+	InlineConfigs []string  `json:"inline_configs,omitempty"`
+	TotalUnits    int       `json:"total_units"`
+	CacheHits     int       `json:"cache_hits"`
 }
 
 // UnitReport holds analysis results for a single unit

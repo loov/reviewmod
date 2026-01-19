@@ -21,25 +21,33 @@ import (
 )
 
 func main() {
-	configPath := flag.String("config", "dreamlint.cue", "path to config file")
+	var configPaths stringSlice
+	var inlineConfigs stringSlice
+	flag.Var(&configPaths, "config", "path to config file (can be specified multiple times)")
+	flag.Var(&inlineConfigs, "c", "inline CUE config (can be specified multiple times)")
 	format := flag.String("format", "all", "output format: json, markdown, sarif, or all")
 	resume := flag.Bool("resume", false, "resume from existing partial report")
 	promptsDir := flag.String("prompts", "", "directory to load prompts from (overrides builtin prompts)")
 	flag.Parse()
+
+	// Default to dreamlint.cue if no config specified
+	if len(configPaths) == 0 {
+		configPaths = []string{"dreamlint.cue"}
+	}
 
 	patterns := flag.Args()
 	if len(patterns) == 0 {
 		patterns = []string{"./..."}
 	}
 
-	if err := run(*configPath, *format, *resume, *promptsDir, patterns); err != nil {
+	if err := run(configPaths, inlineConfigs, *format, *resume, *promptsDir, patterns); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func run(configPath, format string, resume bool, promptsDir string, patterns []string) error {
+func run(configPaths, inlineConfigs []string, format string, resume bool, promptsDir string, patterns []string) error {
 	// Load config
-	cfg, err := config.LoadConfig(configPath)
+	cfg, err := config.LoadConfig(configPaths, inlineConfigs)
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
 	}
@@ -107,7 +115,8 @@ func run(configPath, format string, resume bool, promptsDir string, patterns []s
 	if rpt == nil {
 		rpt = report.NewReport()
 		rpt.Metadata.Modules = patterns
-		rpt.Metadata.ConfigFile = configPath
+		rpt.Metadata.ConfigFiles = configPaths
+		rpt.Metadata.InlineConfigs = inlineConfigs
 		rpt.Metadata.TotalUnits = len(units)
 		rpt.Metadata.GeneratedAt = time.Now()
 	}
